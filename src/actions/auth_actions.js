@@ -12,10 +12,10 @@ export const singIn = (request_data) => {
       } = await apiLogin(request_data);
       dispatch(success(token));
     } catch (e) {
-      const {
-        response: { data },
-      } = e;
-      dispatch(error(data.error));
+          console.log( e)
+
+     
+      //dispatch(error(e));
     }
   };
 };

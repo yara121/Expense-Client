@@ -35,7 +35,7 @@ const Navigation = (props) => {
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto"  navbar>
-          {this.renderLoginOrLogout()}
+          {renderLoginOrLogout()}
           </Nav>
         </Collapse>
       </Navbar>

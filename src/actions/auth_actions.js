@@ -12,6 +12,8 @@ export const singIn = (request_data) => {
       } = await apiLogin(request_data);
       dispatch(success(token));
     } catch (e) {
+      // console.log(e);
+
       const {
         response: { data },
       } = e;
@@ -19,7 +21,19 @@ export const singIn = (request_data) => {
     }
   };
 };
-
+export const onLoadSignIn = () => {
+  return (dispatch) => {
+    try {
+      const token = localStorage.getItem(TOKEN_NAME);
+      if (token === null || token === "undefined") {
+        return dispatch(error({ error: "You need to login" }));
+      }
+      dispatch(success(token));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+};
 const success = (token) => {
   localStorage.setItem(TOKEN_NAME, token);
   return { type: AUTH_SUCCESS };

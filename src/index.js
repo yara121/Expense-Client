@@ -6,6 +6,8 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import store from "./store";
+import { onLoadSignIn } from "./actions/auth_actions";
+store.dispatch(onLoadSignIn());
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>

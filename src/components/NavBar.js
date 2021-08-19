@@ -15,6 +15,7 @@ import {
   DropdownItem,
   NavbarText,
 } from "reactstrap";
+import { logUserOut } from "../actions";
 
 const NavBarComponent = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +27,7 @@ const NavBarComponent = (props) => {
   };
 
   const renderLoginOrLogout = () => {
-    const { isAuth } = props;
+    const { isAuth, logUserOut } = props;
     if (isAuth) {
       return (
         <ButtonDropdown isOpen={dropdownOpen} toggle={toggleButton}>
@@ -34,7 +35,7 @@ const NavBarComponent = (props) => {
             Welcome
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem>Logout</DropdownItem>
+            <DropdownItem onClick={() => logUserOut()}>Logout</DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
       );
@@ -66,5 +67,5 @@ const mapStateToProps = ({ auth }) => {
   };
 };
 
-const Navigation = connect(mapStateToProps)(NavBarComponent);
+const Navigation = connect(mapStateToProps, { logUserOut })(NavBarComponent);
 export default Navigation;

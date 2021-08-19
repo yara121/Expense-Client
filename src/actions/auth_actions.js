@@ -1,4 +1,9 @@
-import { AUTH_ATTEMPTING, AUTH_SUCCESS, AUTH_FAILED } from "./types";
+import {
+  AUTH_ATTEMPTING,
+  AUTH_SUCCESS,
+  AUTH_FAILED,
+  USER_LOGGED_OUT,
+} from "./types";
 // import { apiLogin } from "../api/user";
 //import axios from "axios";
 import { apiLogin } from "../api/user";
@@ -26,13 +31,17 @@ export const onLoadSignIn = () => {
     try {
       const token = localStorage.getItem(TOKEN_NAME);
       if (token === null || token === "undefined") {
-        return dispatch(error({ error: "You need to login" }));
+        return dispatch(error("You need to login"));
       }
       dispatch(success(token));
     } catch (e) {
       console.error(e);
     }
   };
+};
+export const logUserOut = () => {
+  localStorage.clear();
+  return { type: USER_LOGGED_OUT };
 };
 const success = (token) => {
   localStorage.setItem(TOKEN_NAME, token);

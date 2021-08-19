@@ -3,10 +3,12 @@ import {
   AUTH_SUCCESS,
   AUTH_FAILED,
   USER_LOGGED_OUT,
+  PROFILE_FETCHED,
 } from "./types";
 // import { apiLogin } from "../api/user";
 //import axios from "axios";
-import { apiLogin } from "../api/user";
+import { apiLogin, fetchProfile } from "../api/user";
+import setAuthHeader from "../api/setAuthHeader";
 const TOKEN_NAME = "expense_app_token";
 export const singIn = (request_data) => {
   return async (dispatch) => {
@@ -15,6 +17,8 @@ export const singIn = (request_data) => {
       const {
         data: { token },
       } = await apiLogin(request_data);
+      setAuthHeader(token);
+      dispatch(getUserProfile());
       dispatch(success(token));
     } catch (e) {
       // console.log(e);
@@ -33,7 +37,22 @@ export const onLoadSignIn = () => {
       if (token === null || token === "undefined") {
         return dispatch(error("You need to login"));
       }
+      setAuthHeader(token);
       dispatch(success(token));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+};
+
+export const getUserProfile = () => {
+  return async (dispatch) => {
+    try {
+      const {
+        data: { user },
+      } = await fetchProfile();
+
+      dispatch({ type: PROFILE_FETCHED, payload: user });
     } catch (e) {
       console.error(e);
     }

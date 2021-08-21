@@ -5,7 +5,6 @@ export const apiLogin = (request_data) => {
 };
 
 export const fetchProfile = () => {
-  
   return axios.get("/api/v1/me");
 };
 

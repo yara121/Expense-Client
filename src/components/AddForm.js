@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import { connect } from "react-redux";
 import {
   Button,
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
+
   Input,
   FormGroup,
   Label,
@@ -15,15 +15,29 @@ import { FloatButton } from "./FloatButton";
 import { Formik } from "formik";
 import moment from "moment";
 import * as Yup from "yup";
+
+import {saveExpense} from '../actions/expense_actions'
+
 const AddFormComponent = (props) => {
   const { buttonLabel } = props;
 
   const [modal, setModal] = useState(false);
 
   const toggle = () => setModal(!modal);
+  const {saved} = props;
+  useEffect((values,actions) => {
+    const {saved} = props;
+    
+    if(saved&& modal){
+     toggle()
+  // bag.resetForm();
+    }
+  });
   const onSubmit = (values,bag) => {
-console.log(values)
+props.saveExpense(values)
+//  let bag = useRef(bag);
   }
+
   const now = moment().format("YYYY-MM-DD");
   return (
     <div>
@@ -36,10 +50,10 @@ console.log(values)
             initialValues={{ amount: "", created: now }}
             onSubmit={onSubmit}
             validationSchema={Yup.object().shape({
-              account: Yup.number().min(1).required(),
+              amount: Yup.number().min(1).required(),
               created: Yup.date().required(),
             })}
-            render={({ errors, touched, handleBlur, handleChange, values, handleSubmit, isValid, isSubmitting}) => (
+            render={({ errors, touched, handleBlur, handleChange, values, handleSubmit, isValid, isSubmitting,resetForm }) => (
               <div>
                 <FormGroup>
                   <Label>Amount</Label>
@@ -88,5 +102,10 @@ console.log(values)
     </div>
   );
 };
-const AddForm = connect(null)(AddFormComponent);
+const mapStateToProps = ({expense}) => {
+  return {
+    saved:expense.saved
+  }
+}
+const AddForm = connect(mapStateToProps,{saveExpense})(AddFormComponent);
 export { AddForm };

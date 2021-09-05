@@ -14,7 +14,7 @@ class AddFormComponent extends Component {
             modal:false
         };
         this.toggle = this.toggle.bind(this)
-        this.onSubmit = this._onSubmit.bind(this);
+      
     }
 toggle(){
     this.setState({
@@ -26,7 +26,7 @@ componentDidUpdate(){
   const {saved} =this.props;
   const {modal} = this.state;
   if(saved && modal){
-    this.toggle()
+    // this.toggle()
     this.bag.resetForm();
   }
 }
@@ -39,8 +39,8 @@ _onSubmit(values,bag){
         return (
           <div>
             <FloatButton onClick={this.toggle} />
-            <Modal isOpen={this.state.modal} toggle={this.toggle} >
-              <ModalHeader toggle={this.toggle}>Add Expense</ModalHeader>
+            <Modal isOpen={this.state.modal}  >
+              <ModalHeader toggle={this.toggle} >Add Expense</ModalHeader>
               <ModalBody>
                <Formik
                initialValues={{amount:'',created:now}}

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { AddForm} from "../components";
+import SecondForm from "../components/SecondForm";
 
 class Home extends Component {
   render() {
@@ -8,6 +9,7 @@ class Home extends Component {
         Home
      
         <AddForm />
+        <SecondForm />
       </div>
     );
   }

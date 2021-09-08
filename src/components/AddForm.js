@@ -5,8 +5,9 @@ import {Button,Modal,ModalHeader,ModalBody,Input,FormGroup,Label,FormFeedback} f
 import moment from 'moment';
 import * as Yup from 'yup';
 
-import {saveExpense} from '../actions/expense_actions'
+import {saveExpense,resetSaved} from '../actions/expense_actions'
 import { FloatButton } from './FloatButton';
+import {ErrorMessage} from './ErrorMessage'
 class AddFormComponent extends Component {
     constructor(props) {
         super(props);
@@ -21,9 +22,14 @@ class AddFormComponent extends Component {
         })
     }
     componentDidUpdate(){
-    const {saved} = this.props;
-    const {modal} = this.state
+    const {saved,error,resetSaved} = this.props;
+    const {modal} = this.state;
+
+    if(error){
+      this.bag.setSubmitting(false);
+    }
     if(saved && modal ){
+      resetSaved();
       this.toggle();
       this.bag.resetForm();
     }
@@ -42,15 +48,33 @@ class AddFormComponent extends Component {
                 <ModalHeader toggle={this.toggle}>Add Expense</ModalHeader>
                 <ModalBody>
                     <Formik
-                    initialValues={{amount:'',created:now}}
+                    initialValues={{amount:'',created:now,description:''}}
                     onSubmit={this._onSubmit.bind(this)}
                     validationSchema={Yup.object().shape({
                         amount: Yup.number().min(1).required(),
+                        description:Yup.string().min(3),
                     
                         created: Yup.date().required(),
                       })}
                     render = {({errors,touched,handleBlur,handleChange,values,handleSubmit, isValid,isSubmitting})=>(
-                        <div>
+                       
+                       <div>
+                         <ErrorMessage />
+                         <FormGroup>
+            <Label>Description</Label>
+            <Input
+              invalid={errors.description && touched.description}
+              name="description"
+              type="string"
+              value={values.description}
+              placeholder="Enter Expesne description"
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.description && touched.description && (
+              <FormFeedback>{errors.description}</FormFeedback>
+            )}
+          </FormGroup>
                             <FormGroup>
                             <Label>Amount</Label>
                             <Input
@@ -99,10 +123,11 @@ class AddFormComponent extends Component {
     }
         
 }
-const mapStateToProps =({expense}) =>{
+const mapStateToProps =({expense,errors}) =>{
   return {
-    saved: expense.saved
+    saved: expense.saved,
+    error:errors.message
   }
 }
-const AddForm = connect(mapStateToProps,{saveExpense})(AddFormComponent);
+const AddForm = connect(mapStateToProps,{saveExpense,resetSaved})(AddFormComponent);
 export {AddForm};
